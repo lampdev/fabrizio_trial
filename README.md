@@ -1,13 +1,6 @@
 fabrizio Test Task
 ========
 
-#### Missing features
-
-- dashboard
-- donate panel
-- fixtures 
-- no tests
-
 #### Prerequisites
 
 - free 80 port

@@ -18,11 +18,21 @@ class DonatorsController extends Controller
      */
     public function listAction()
     {
+        $allTimeAmount = 0;
+        $monthAmount = 0;
+        $from = date('Y-m-d h:i:s', strtotime('-1 month'));
+        $to = date('Y-m-d h:i:s');
         $em = $this->getDoctrine()->getManager();
-        $donators = $em->getRepository('AppBundle:Donators')->findBy(array(), array('amount' => 'DESC'), 1);
+        $topDonator = $em->getRepository('AppBundle:Donators')->findBy(array(), array('amount' => 'DESC'), 1);
+        $allTimeDonations = $em->getRepository('AppBundle:Donators')->findAll();
+        foreach($allTimeDonations as $allTimeDonation) {
+            $allTimeAmount += $allTimeDonation->getAmount();
+        }
+
 
         return $this->render('AppBundle:Donators:list.html.twig', array(
-            'donators' => $donators
+            'top_donator' => $topDonator,
+            'all_time_amount' => $allTimeAmount
         ));
     }
 

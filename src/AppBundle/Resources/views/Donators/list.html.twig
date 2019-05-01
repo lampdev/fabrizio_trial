@@ -1,0 +1,34 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}AppBundle:Donators:list{% endblock %}
+
+{% block content %}
+
+
+
+    <table class="highlight responsive-table">
+        <thead>
+        <tr>
+            <th><h5>Top Donator</h5></th>
+            <th><h5>Month Donations</h5></th>
+            <th><h5>All time Donations</h5></th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {%  for donator in donators %}
+        <tr>
+            <td>{{ donator.name }}</td>
+            <td>{{ donator.email }}</td>
+            <td>{{ donator.amount }}</td>
+            <td>
+                <a href="{{ url('view',   { 'id': donator.id }) }}"><i class="material-icons">pageview</i></a>
+                <a href="{{ url('create', { 'id': donator.id }) }}"><i class="material-icons">edit</i></a>
+                <a href="{{ url('delete', { 'id': donator.id }) }}"><i class="material-icons">delete</i></a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

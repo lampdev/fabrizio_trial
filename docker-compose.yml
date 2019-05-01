@@ -1,0 +1,51 @@
+version: '2'
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/fabrizio
+      - ./docker/configs/nginx:/etc/nginx/conf.d
+      - ./docker/logs:/var/log/nginx
+    command: /bin/bash -c "rm -rf /var/www/fabrizio/var/cache && mkdir /var/www/fabrizio/var/cache && chmod -R 777 /var/www/fabrizio/var/cache  && chmod -R 777 /var/www/fabrizio/var/logs && chmod -R 777 /var/www/fabrizio/var/sessions && nginx -g 'daemon off;'"
+    networks:
+      main:
+        aliases:
+          - web
+  php:
+    image: bytes85/php7.1-fpm
+    volumes:
+      - ./:/var/www/fabrizio
+      - ./docker/configs/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+    ports:
+      - "9000"
+    networks:
+      main:
+        aliases:
+          - php
+  db:
+    image: mysql:5.7
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    networks:
+      main:
+        aliases:
+          - db
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      main:
+        aliases:
+          - mailcatcher
+networks:
+  main:

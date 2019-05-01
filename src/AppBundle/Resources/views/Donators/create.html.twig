@@ -1,0 +1,13 @@
+{% extends "::base.html.twig" %}
+{% form_theme form 'form/fields.html.twig' %}
+
+{% block title %}Donate{% endblock %}
+
+{% block content %}
+    <h1>Donate</h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}

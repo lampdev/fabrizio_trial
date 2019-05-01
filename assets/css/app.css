@@ -1,0 +1,7 @@
+.contentwrapper {
+    margin: 40px;
+}
+
+form, table.viewtable {
+    width: 500px;
+}

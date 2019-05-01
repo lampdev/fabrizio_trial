@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<nav>
+    <div class="nav-wrapper">
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="{{ url('list') }}">Dashboard</a></li>
+            <li><a href="{{ url('create') }}">DONATE</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="contentwrapper">
+    {% for flashMessage in app.session.flashbag.get('error') %}
+
+        <div class="card-panel red lighten-2">{{ flashMessage }}</div>
+
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('success') %}
+
+        <div class="card-panel teal lighten-2">{{ flashMessage }}</div>
+
+    {% endfor %}
+    {% block content %}
+
+    {% endblock %}
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+</body>
+</html>

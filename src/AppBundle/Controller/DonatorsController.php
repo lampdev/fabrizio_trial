@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Donators;
 use AppBundle\Form\DonatorsType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Intl\Intl;
 
@@ -16,23 +17,43 @@ class DonatorsController extends Controller
     /**
      * @Route("/", name="list")
      */
-    public function listAction()
+    public function listAction(Request $request)
     {
         $allTimeAmount = 0;
-        $monthAmount = 0;
+        $lastMonthAmount = 0;
         $from = date('Y-m-d h:i:s', strtotime('-1 month'));
         $to = date('Y-m-d h:i:s');
         $em = $this->getDoctrine()->getManager();
-        $topDonator = $em->getRepository('AppBundle:Donators')->findBy(array(), array('amount' => 'DESC'), 1);
+        $entManager = $this->get('doctrine.orm.entity_manager');
+        $dql   = "SELECT a FROM AppBundle:Donators a";
+        $query = $entManager->createQuery($dql);
+
+//        $allDonations = $em->getRepository('AppBundle:Donators')->findAll();
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+        $topDonator = $em->getRepository('AppBundle:Donators')
+            ->findBy(array(), array('amount' => 'DESC'), 1);
+        $lastMonthDonations = $this->getDoctrine()
+            ->getRepository(Donators::class)
+            ->getDonationsLastMonth($from, $to);
+
+        foreach($lastMonthDonations as $lastMonthDonation) {
+            $lastMonthAmount += $lastMonthDonation->getAmount();
+        }
         $allTimeDonations = $em->getRepository('AppBundle:Donators')->findAll();
+
         foreach($allTimeDonations as $allTimeDonation) {
             $allTimeAmount += $allTimeDonation->getAmount();
         }
-
-
         return $this->render('AppBundle:Donators:list.html.twig', array(
-            'top_donator' => $topDonator,
-            'all_time_amount' => $allTimeAmount
+            'top_donator'       => $topDonator,
+            'all_time_amount'   => $allTimeAmount,
+            'last_month_amount' => $lastMonthAmount,
+            'all_donations' =>  $pagination
         ));
     }
 
@@ -52,10 +73,9 @@ class DonatorsController extends Controller
         $form = $this->createForm(DonatorsType::class, $donator);
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $donator = $form->getData();
-
+            $donator->setCreatedAt(new \DateTime('NOW'));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($donator);
@@ -91,22 +111,20 @@ class DonatorsController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="delete")
+     * @Route("/stats", name="stats")
+     *
      */
-    public function deleteAction(Request $request)
+    public function statsAction()
     {
-        if(($id = $request->get('id'))) {
-            $em = $this->getDoctrine()->getManager();
-            $person = $em->getRepository('AppBundle:Person')->findOneBy([
-                'id' => $id
-            ]);
-
-            $em->remove($person);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $donations = $em->getRepository(Donators::class)->getDonationsByDay();
+        foreach ($donations as $donation) {
+            $jsonDonations[] = [
+              'date' => $donation['DATE(created_at)'],
+              'amount' => intval($donation['SUM(amount)'])
+            ];
         }
-        $this->addFlash('success', 'Person has been successfully deleted.');
-
-        return $this->redirectToRoute('list');
+        return new JsonResponse($jsonDonations);
     }
 
 }

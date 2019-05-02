@@ -12,10 +12,10 @@ class AppFixtures extends Fixture
     {
         for ($i = 0; $i < 50; $i++) {
             $donators = new Donators();
-            $donators->setName('donator_ '.$i);
-            $donators->setEmail('donator '.$i.'@mail.email');
+            $donators->setName('donator_'.$i);
+            $donators->setEmail('donator_'.$i.'@mail.email');
             $donators->setAmount(mt_rand(10, 100) / 10);
-            $donators->setMessage('donators_message_number_ '.$i);
+            $donators->setMessage('donators_message_number_'.$i);
             $donators->setCreatedAt(
                 date_create_from_format('Y-m-d h:i:s', date('Y-m-d h:i:s', strtotime('-' . $i . ' days')))
             );

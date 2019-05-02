@@ -28,7 +28,7 @@ final class Version20190307220420 extends AbstractMigration
     `email` VARCHAR(255) NOT NULL, 
     `amount` FLOAT(7, 2) NOT NULL, 
     `message` TEXT DEFAULT NULL,
-    `created_at` DATETIME,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(`id`))' );
     }
 

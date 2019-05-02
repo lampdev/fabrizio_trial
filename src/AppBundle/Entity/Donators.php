@@ -1,41 +1,63 @@
 <?php
 
 namespace AppBundle\Entity;
+//use Symfony\Component\Validator\Constraints as Assert;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\AST\Functions\CurrentDateFunction;
 
 /**
  * Donators
+ *
+ * @ORM\Table(name="donators")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DonatorsRepository")
  */
 class Donators
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="amount", type="float", precision=7, scale=2, nullable=false)
      */
     private $amount;
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(name="message", type="text", length=65535, nullable=true)
      */
     private $message;
 
     /**
      * @var \DateTime|null
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
 
 
     /**
@@ -141,9 +163,9 @@ class Donators
      *
      * @return Donators
      */
-    public function setCreatedAt($createdAt = null)
+    public function setCreatedAt($createdAt)
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt;
 
         return $this;
     }

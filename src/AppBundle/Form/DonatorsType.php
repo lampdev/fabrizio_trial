@@ -4,10 +4,9 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use AppBundle\Form\Transformers\DatetimeToStringTransformer;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DonatorsType extends AbstractType
@@ -17,11 +16,13 @@ class DonatorsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')
-            ->add('email')
-            ->add('amount')
-            ->add('message')
-            ->add('save', SubmitType::class, [
+        $builder->add('name', TextType::class)
+            ->add('email', TextType::class)
+            ->add('amount', MoneyType::class, [
+                'currency' => 'USD'
+            ])
+            ->add('message', TextType::class)
+            ->add('Donate', SubmitType::class, [
             'attr' => [
                 'class' => 'waves-effect waves-light btn'
             ],

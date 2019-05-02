@@ -4,40 +4,67 @@
 
 {% block content %}
 
+                <div class="row">
+                    <div class="col s12 m6 l3">
+                        <div class="card">
+                            <div class="card-content  green white-text">
+                                <p class="card-stats-title"><i class="mdi-social-group-add"></i>Top Donator</p>
+                                {%  for donator in top_donator %}
+                                    <h4 class="card-stats-number">${{ donator.amount }}</h4>
+                                <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> {{ donator.name }} <span class="green-text text-lighten-5"></span>
+                                {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="card">
+                            <div class="card-content purple white-text">
+                                <p class="card-stats-title"><i class="mdi-editor-attach-money"></i>Last Month Amount</p>
+                                <h4 class="card-stats-number">${{ last_month_amount }}</h4>
+                                <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> &nbsp <span class="purple-text text-lighten-5">&nbsp</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 l3">
+                        <div class="card">
+                            <div class="card-content blue-grey white-text">
+                                <p class="card-stats-title"><i class="mdi-action-trending-up"></i>All time amount</p>
+                                <h4 class="card-stats-number">${{ all_time_amount }}</h4>
+                                <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> &nbsp <span class="blue-grey-text text-lighten-5">&nbsp</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+    <div id="chart_div"></div>
 
-    <table class="highlight responsive-table">
+    <table>
         <thead>
         <tr>
-            <th><h5>Top Donator Name</h5></th>
-            <th><h5>Top Donator Amount</h5></th>
+            <th>Donator Name</th>
+            <th>Email</th>
+            <th>Amount</th>
+            <th>Message</th>
+            <th>Date</th>
         </tr>
         </thead>
-
-        <tbody>
-
-        {%  for donator in top_donator %}
+        {% for all_donation in all_donations %}
+            <tbody>
             <tr>
-                <td>{{ donator.name }}</td>
-                <td>{{ donator.amount }}</td>
+                <td>{{ all_donation.name }}</td>
+                <td>{{ all_donation.email }}</td>
+                <td>{{ all_donation.amount }}</td>
+                <td>{{ all_donation.message }}</td>
+                <td>{{ all_donation.getCreatedAt()|date('Y-m-d h:i:s') }}</td>
             </tr>
+            </tbody>
         {% endfor %}
-        </tbody>
     </table>
 
-
-    <table class="highlight responsive-table">
-        <thead>
-        <tr>
-            <th><h5>All time amount</h5></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr>
-            <td>{{ all_time_amount }}</td>
-        </tr>
-        </tbody>
-    </table>
-
+    <div style="position: center !important;" class="navigation">
+        {{ knp_pagination_render(all_donations) }}
+    </div>
 {% endblock %}

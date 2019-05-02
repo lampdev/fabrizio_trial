@@ -1,6 +1,15 @@
 fabrizio Test Task
 ========
 
+#### Missing features
+
+- paging on list action
+- delete confirmation
+- no fixtures 
+- birthday could be in the future
+- no tests
+- possible issues with large images/imagick, but perpaps only recreatable on my desktop
+
 #### Prerequisites
 
 - free 80 port
